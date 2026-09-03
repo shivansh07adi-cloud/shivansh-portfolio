@@ -1,0 +1,38 @@
+@import "tailwindcss";
+
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Lora:ital,wght@0,400..700;1,400..700&family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&display=swap');
+
+@theme {
+  --font-serif: "Playfair Display", Georgia, serif;
+  --font-body: "Lora", Georgia, serif;
+  --font-mono: "JetBrains Mono", monospace;
+  
+  --color-canvas: #FAF8F2; /* Warm, rich editorial cream background */
+  --color-ink-dark: #121212; /* Deep charcoal ink text */
+  --color-ink-gray: #4A4A48; /* Sophisticated gray ink */
+  --color-ink-light: #8E8E8A; /* Very light slate-gray */
+  --color-accent-mute: #CEC0A8; /* Vintage muted gold accent border */
+}
+
+body {
+  background-color: var(--color-canvas);
+  color: var(--color-ink-dark);
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Custom scrollbar styling for high-fidelity interactive look */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: var(--color-canvas);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-accent-mute);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-ink-light);
+}
