@@ -15,6 +15,11 @@ import minnesotaLogo from '../assets/logos/minnesota.png';
 import googleLogo from '../assets/logos/google.png';
 import nasaLogo from '../assets/logos/nasa.png';
 import infosysLogo from '../assets/logos/infosys.png';
+import columbiaLogo from '../assets/logos/columbia.png';
+import SectionHeading from './ui/SectionHeading';
+import TiltCard from './ui/TiltCard';
+import Deco from './ui/Deco';
+import dotsRing from '../assets/deco/dots-ring.webp';
 
 // Real uploaded brand-mark images for issuers without a clean icon-library match.
 const IMAGE_LOGOS: Record<string, { src: string; bg: string; fit?: 'contain' | 'cover'; pad?: string }> = {
@@ -27,12 +32,29 @@ const IMAGE_LOGOS: Record<string, { src: string; bg: string; fit?: 'contain' | '
   'cert-gpm': { src: googleLogo, bg: '#FFFFFF', pad: 'p-1.5' },
   'cert-nasa': { src: nasaLogo, bg: '#FFFFFF', pad: 'p-1' },
   'cert-infosys-frontend': { src: infosysLogo, bg: '#FFFFFF', pad: 'p-1.5' },
-  'cert-infosys-net': { src: infosysLogo, bg: '#FFFFFF', pad: 'p-1.5' }
+  'cert-infosys-net': { src: infosysLogo, bg: '#FFFFFF', pad: 'p-1.5' },
+  'cert-ibm-devops': { src: ibmLogo, bg: '#FFFFFF', pad: 'p-1.5' },
+  'cert-ibm-de': { src: ibmLogo, bg: '#FFFFFF', pad: 'p-1.5' },
+  'cert-fabric-gov': { src: microsoftLogo, bg: '#FFFFFF', pad: 'p-1.5' },
+  'cert-fabric-dw': { src: microsoftLogo, bg: '#FFFFFF', pad: 'p-1.5' },
+  'cert-columbia-fe': { src: columbiaLogo, bg: '#0C2C77' },
 };
 
 // Real brand mark paths (viewBox 0 0 24 24) for issuers with a recognizable logo.
 // Issuers without an available mark fall back to a styled monogram badge.
 const BRAND_LOGOS: Record<string, { path: string; bg: string; fg: string }> = {
+  'cert-redhat': {
+    path: 'M16.009 13.386c1.577 0 3.86-.326 3.86-2.202a1.765 1.765 0 0 0-.04-.431l-.94-4.08c-.216-.898-.406-1.305-1.982-2.093-1.223-.625-3.888-1.658-4.676-1.658-.733 0-.947.946-1.822.946-.842 0-1.467-.706-2.255-.706-.757 0-1.25.515-1.63 1.576 0 0-1.06 2.99-1.197 3.424a.81.81 0 0 0-.028.245c0 1.162 4.577 4.974 10.71 4.974m4.101-1.435c.218 1.032.218 1.14.218 1.277 0 1.765-1.984 2.745-4.593 2.745-5.895.004-11.06-3.451-11.06-5.734a2.326 2.326 0 0 1 .19-.925C2.746 9.415 0 9.794 0 12.217c0 3.969 9.405 8.861 16.851 8.861 5.71 0 7.149-2.582 7.149-4.62 0-1.605-1.387-3.425-3.887-4.512',
+    bg: '#FFFFFF', fg: '#EE0000'
+  },
+  'cert-linux-oss': {
+    path: 'M4.8 19.2h9.6V24H0V9.6h4.8v9.6zM0 0v7.2h4.8V4.822h14.4V19.2h-2.4V24H24V0H0z',
+    bg: '#FFFFFF', fg: '#003778'
+  },
+  'cert-meta-be': {
+    path: 'M6.915 4.03c-1.968 0-3.683 1.28-4.871 3.113C.704 9.208 0 11.883 0 14.449c0 .706.07 1.369.21 1.973a6.624 6.624 0 0 0 .265.86 5.297 5.297 0 0 0 .371.761c.696 1.159 1.818 1.927 3.593 1.927 1.497 0 2.633-.671 3.965-2.444.76-1.012 1.144-1.626 2.663-4.32l.756-1.339.186-.325c.061.1.121.196.183.3l2.152 3.595c.724 1.21 1.665 2.556 2.47 3.314 1.046.987 1.992 1.22 3.06 1.22 1.075 0 1.876-.355 2.455-.843a3.743 3.743 0 0 0 .81-.973c.542-.939.861-2.127.861-3.745 0-2.72-.681-5.357-2.084-7.45-1.282-1.912-2.957-2.93-4.716-2.93-1.047 0-2.088.467-3.053 1.308-.652.57-1.257 1.29-1.82 2.05-.69-.875-1.335-1.547-1.958-2.056-1.182-.966-2.315-1.303-3.454-1.303zm10.16 2.053c1.147 0 2.188.758 2.992 1.999 1.132 1.748 1.647 4.195 1.647 6.4 0 1.548-.368 2.9-1.839 2.9-.58 0-1.027-.23-1.664-1.004-.496-.601-1.343-1.878-2.832-4.358l-.617-1.028a44.908 44.908 0 0 0-1.255-1.98c.07-.109.141-.224.211-.327 1.12-1.667 2.118-2.602 3.358-2.602zm-10.201.553c1.265 0 2.058.791 2.675 1.446.307.327.737.871 1.234 1.579l-1.02 1.566c-.757 1.163-1.882 3.017-2.837 4.338-1.191 1.649-1.81 1.817-2.486 1.817-.524 0-1.038-.237-1.383-.794-.263-.426-.464-1.13-.464-2.046 0-2.221.63-4.535 1.66-6.088.454-.687.964-1.226 1.533-1.533a2.264 2.264 0 0 1 1.088-.285z',
+    bg: '#FFFFFF', fg: '#0467DF'
+  },
   'cert-gpm': {
     path: 'M12.48 10.92v3.28h7.84c-.24 1.84-.853 3.187-1.787 4.133-1.147 1.147-2.933 2.4-6.053 2.4-4.827 0-8.6-3.893-8.6-8.72s3.773-8.72 8.6-8.72c2.6 0 4.507 1.027 5.907 2.347l2.307-2.307C18.747 1.44 16.133 0 12.48 0 5.867 0 .307 5.387.307 12s5.56 12 12.173 12c3.573 0 6.267-1.173 8.373-3.36 2.16-2.16 2.84-5.213 2.84-7.667 0-.76-.053-1.467-.173-2.053H12.48z',
     bg: '#FFFFFF', fg: '#4285F4'
@@ -80,111 +102,83 @@ function initials(issuer: string) {
 
 export default function Certifications() {
   return (
-    <section
-      id="certifications"
-      className="w-full py-16 md:py-24 px-6 md:px-12 max-w-4xl mx-auto border-b border-accent-mute/25"
-    >
-      {/* Category Header Flag */}
-      <div className="flex items-center gap-3 mb-4 font-mono text-[10px] md:text-xs tracking-widest text-ink-light">
-        <span className="font-semibold text-ink-dark">10</span>
-        <span className="w-8 h-[1px] bg-accent-mute" />
-        <span className="uppercase">PAPER TRAIL</span>
-      </div>
+    <section id="certifications" className="relative w-full py-16 md:py-24 px-6 md:px-12 max-w-6xl mx-auto">
+      <Deco src={dotsRing} className="right-[-6%] top-[0%] w-[280px]" />
 
-      {/* Heading */}
-      <div className="mb-10">
-        <h2 className="font-serif text-4xl md:text-6xl font-bold italic text-ink-dark mb-4 leading-tight tracking-tight">
-          {CERTIFICATIONS_LIST.length} Certifications & Counting.
-        </h2>
-        <p className="font-body text-sm md:text-base text-ink-gray max-w-xl">
-          From cloud infrastructure to earth science — a running log of things I sat down and actually finished.
-        </p>
-      </div>
+      <SectionHeading
+        label="Paper Trail"
+        title={`${CERTIFICATIONS_LIST.length} Certifications & Counting.`}
+        subtitle="From cloud infrastructure to earth science — a running log of things I sat down and actually finished."
+        className="mb-12"
+      />
 
-      {/* Badge Wall — dense uniform grid, logo tile + left-accent ID-card style, distinct from every other section */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
         {CERTIFICATIONS_LIST.map((cert, idx) => {
           const logo = BRAND_LOGOS[cert.id];
           const imgLogo = IMAGE_LOGOS[cert.id];
           return (
             <motion.div
               key={cert.id}
-              initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
+              initial={{ opacity: 0, y: 14 }}
+              whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: '-60px' }}
-              transition={{ duration: 0.35, delay: idx * 0.03 }}
-              className="flex items-stretch gap-3 bg-[#FAF6EE] border border-accent-mute/25 rounded-md overflow-hidden hover:shadow-md transition-shadow duration-300"
+              transition={{ duration: 0.4, delay: (idx % 2) * 0.06 }}
             >
-              {/* Accent spine */}
-              <div className="w-1 shrink-0" style={{ backgroundColor: cert.accent }} />
+              <TiltCard max={14} lift={6} className="h-full flex items-stretch gap-4 bg-white rounded-md overflow-hidden shadow-[0_10px_36px_rgba(110,100,170,0.11)]">
+                <div className="w-1.5 shrink-0" style={{ backgroundColor: cert.accent }} />
 
-              {/* Logo tile */}
-              <div className="shrink-0 flex items-center pl-2.5 py-2.5">
-                {imgLogo ? (
-                  <div
-                    className={`w-9 h-9 rounded-md flex items-center justify-center shrink-0 border border-black/5 shadow-sm overflow-hidden ${imgLogo.pad || ''}`}
-                    style={{ backgroundColor: imgLogo.bg }}
-                  >
-                    <img src={imgLogo.src} alt="" className="w-full h-full object-contain" />
-                  </div>
-                ) : logo ? (
-                  <div
-                    className="w-9 h-9 rounded-md flex items-center justify-center shrink-0 border border-black/5 shadow-sm"
-                    style={{ backgroundColor: logo.bg }}
-                  >
-                    <svg viewBox="0 0 24 24" className="w-[18px] h-[18px]" fill={logo.fg}>
-                      <path d={logo.path} />
-                    </svg>
-                  </div>
-                ) : (
-                  <div
-                    className="w-9 h-9 rounded-md flex items-center justify-center shrink-0 shadow-sm"
-                    style={{ backgroundColor: cert.accent }}
-                  >
-                    <span className="font-mono text-[11px] font-bold text-white tracking-tight">
-                      {initials(cert.issuer)}
-                    </span>
-                  </div>
-                )}
-              </div>
-
-              <div className="py-2.5 pr-3 flex-1 min-w-0">
-                <h3 className="font-serif text-[13.5px] font-bold text-ink-dark leading-tight mb-0.5">
-                  {cert.title}
-                </h3>
-                <p className="font-body text-[11.5px] text-ink-gray mb-1">
-                  {cert.issuer}
-                </p>
-                <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
-                  <span className="font-mono text-[9px] uppercase tracking-widest text-ink-light">
-                    {cert.date}
-                  </span>
-                  {cert.skills.slice(0, 2).map((skill) => (
-                    <span
-                      key={skill}
-                      className="font-mono text-[8.5px] px-1.5 py-0.5 rounded-sm border border-accent-mute/25 bg-white text-ink-gray"
+                <div className="shrink-0 flex items-center py-4">
+                  {imgLogo ? (
+                    <div
+                      className={`w-11 h-11 rounded-md flex items-center justify-center shrink-0 border border-black/5 shadow-sm overflow-hidden ${imgLogo.pad || ''}`}
+                      style={{ backgroundColor: imgLogo.bg }}
                     >
-                      {skill}
-                    </span>
-                  ))}
+                      <img src={imgLogo.src} alt="" loading="lazy" decoding="async" className="w-full h-full object-contain" />
+                    </div>
+                  ) : logo ? (
+                    <div className="w-11 h-11 rounded-md flex items-center justify-center shrink-0 border border-black/5 shadow-sm" style={{ backgroundColor: logo.bg }}>
+                      <svg viewBox="0 0 24 24" className="w-[22px] h-[22px]" fill={logo.fg}>
+                        <path d={logo.path} />
+                      </svg>
+                    </div>
+                  ) : (
+                    <div className="w-11 h-11 rounded-md flex items-center justify-center shrink-0 shadow-sm" style={{ backgroundColor: cert.accent }}>
+                      <span className="font-jost text-[13px] font-semibold text-white">{initials(cert.issuer)}</span>
+                    </div>
+                  )}
                 </div>
-              </div>
+
+                <div className="py-4 pr-5 flex-1 min-w-0">
+                  <h3 className="font-jost text-black text-[17px] font-medium leading-snug mb-0.5">{cert.title}</h3>
+                  <p className="font-jost text-brand text-[15px] mb-2">{cert.issuer}</p>
+                  <div className="flex flex-wrap items-center gap-x-2 gap-y-1.5">
+                    <span className="font-jost text-[13px] text-ink-light">{cert.date}</span>
+                    {cert.skills.slice(0, 2).map((skill) => (
+                      <span key={skill} className="font-jost text-[12px] px-2.5 py-0.5 rounded-full border border-[#E4E1EE] text-[#4B4760] bg-white">
+                        {skill}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              </TiltCard>
             </motion.div>
           );
         })}
       </div>
 
-      {/* Link to full, verified list on LinkedIn */}
-      <a
-        href={`${PERSONAL_INFO.linkedin}/details/certifications/`}
-        target="_blank"
-        rel="noreferrer"
-        className="mt-6 inline-flex items-center gap-1.5 text-xs font-mono font-bold text-[#0A66C2] hover:text-ink-dark transition-colors"
-      >
-        <Linkedin size={13} />
-        <span>View all, verified, on LinkedIn</span>
-        <ArrowUpRight size={12} />
-      </a>
+      <div className="mt-12 text-center">
+        <a
+          href={`${PERSONAL_INFO.linkedin}/details/certifications/`}
+          target="_blank"
+          rel="noreferrer"
+          className="btn-wipe btn-wipe-outline btn-wipe-sm"
+          style={{ padding: '0.7rem 1.6rem' }}
+        >
+          <Linkedin size={15} />
+          <span>View all, verified, on LinkedIn</span>
+          <ArrowUpRight size={14} />
+        </a>
+      </div>
     </section>
   );
 }

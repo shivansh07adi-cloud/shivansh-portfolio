@@ -6,99 +6,72 @@
 import { motion } from 'motion/react';
 import { Users, Trophy, FlaskConical, Laptop, Clock } from 'lucide-react';
 import { VOLUNTEER_LIST } from '../data';
+import SectionHeading from './ui/SectionHeading';
+import TiltCard from './ui/TiltCard';
+import Deco from './ui/Deco';
+import splash from '../assets/deco/splash.webp';
+import blobRed from '../assets/deco/blob-red.webp';
+import blobGreen from '../assets/deco/blob-green.webp';
+import blobLilac from '../assets/deco/blob-lilac.webp';
+import blobCream from '../assets/deco/blob-cream.webp';
 
-const ICONS = {
-  users: Users,
-  trophy: Trophy,
-  flask: FlaskConical,
-  laptop: Laptop,
-};
+const ICONS = { users: Users, trophy: Trophy, flask: FlaskConical, laptop: Laptop };
+const BLOBS = [blobRed, blobGreen, blobLilac, blobCream];
 
 export default function Volunteering() {
   const causeCount = new Set(VOLUNTEER_LIST.map((v) => v.cause)).size;
 
   return (
-    <section
-      id="volunteering"
-      className="w-full py-16 md:py-24 px-6 md:px-12 max-w-4xl mx-auto border-b border-accent-mute/25"
-    >
-      {/* Category Header Flag */}
-      <div className="flex items-center gap-3 mb-4 font-mono text-[10px] md:text-xs tracking-widest text-ink-light">
-        <span className="font-semibold text-ink-dark">06</span>
-        <span className="w-8 h-[1px] bg-accent-mute" />
-        <span className="uppercase">BEYOND THE DESK</span>
-      </div>
+    <section id="volunteering" className="relative w-full py-16 md:py-24 px-6 md:px-12 max-w-6xl mx-auto">
+      <Deco src={splash} className="right-[-2%] top-[2%] w-[140px]" />
 
-      {/* Heading */}
-      <div className="mb-4 flex flex-wrap items-end justify-between gap-4">
-        <div>
-          <h2 className="font-serif text-4xl md:text-6xl font-bold italic text-ink-dark mb-4 leading-tight tracking-tight">
-            Time, Given Freely.
-          </h2>
-          <p className="font-body text-sm md:text-base text-ink-gray max-w-xl">
-            No invoice attached to these. {VOLUNTEER_LIST.length} roles across {causeCount} causes —
-            campus life, community, and research — outside of any paycheck.
-          </p>
-        </div>
-      </div>
+      <SectionHeading
+        label="Beyond The Desk"
+        title="Time, Given Freely."
+        subtitle={`No invoice attached to these. ${VOLUNTEER_LIST.length} roles across ${causeCount} causes — campus life, community, and research — outside of any paycheck.`}
+      />
 
-      {/* Mosaic Card Grid — intentionally distinct from the Experience timeline */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-5 mt-10">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
         {VOLUNTEER_LIST.map((vol, idx) => {
           const Icon = ICONS[vol.icon];
           return (
             <motion.div
               key={vol.id}
-              initial={{ opacity: 0, y: 24, rotate: idx % 2 === 0 ? -1 : 1 }}
-              whileInView={{ opacity: 1, y: 0, rotate: 0 }}
+              initial={{ opacity: 0, y: 24 }}
+              whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: '-80px' }}
-              transition={{ duration: 0.5, delay: idx * 0.08 }}
-              whileHover={{ y: -4, rotate: idx % 2 === 0 ? -0.5 : 0.5 }}
-              className="relative overflow-hidden rounded-xl border border-accent-mute/30 bg-[#FAF6EE] shadow-sm hover:shadow-lg transition-shadow duration-300 p-5 md:p-6"
+              transition={{ duration: 0.5, delay: (idx % 2) * 0.08 }}
             >
-              {/* Gradient corner glow unique to each card's cause color */}
-              <div
-                className="absolute -top-10 -right-10 w-28 h-28 rounded-full opacity-20 blur-2xl pointer-events-none"
-                style={{ background: `linear-gradient(135deg, ${vol.colorFrom}, ${vol.colorTo})` }}
-              />
+              <TiltCard className="h-full bg-white rounded-md p-8 md:p-10 shadow-[0_14px_50px_rgba(110,100,170,0.12)]">
+                <div className="flex items-start gap-5 mb-5">
+                  <span
+                    className="shrink-0 w-[74px] h-[74px] flex items-center justify-center bg-contain bg-center bg-no-repeat"
+                    style={{ backgroundImage: `url(${BLOBS[idx % BLOBS.length]})`, color: idx % 4 === 0 ? '#fff' : '#111' }}
+                  >
+                    <Icon size={26} strokeWidth={1.8} />
+                  </span>
+                  <div className="min-w-0">
+                    <h3 className="font-jost text-black text-2xl font-medium leading-tight">{vol.role}</h3>
+                    <p className="font-jost text-black text-base mt-1">
+                      Cause: <span className="text-brand">{vol.cause}</span>
+                    </p>
+                  </div>
+                </div>
 
-              {/* Icon badge */}
-              <div
-                className="w-11 h-11 rounded-full flex items-center justify-center mb-4 shadow-inner"
-                style={{ background: `linear-gradient(135deg, ${vol.colorFrom}, ${vol.colorTo})` }}
-              >
-                <Icon size={18} className="text-white" strokeWidth={2.2} />
-              </div>
+                <p className="font-jost text-black text-lg mb-2">{vol.organization}</p>
+                <p className="font-body text-brand-gray text-[15px] leading-[1.85] mb-5">{vol.description}</p>
 
-              {/* Cause pill */}
-              <span className="inline-block font-mono text-[9.5px] uppercase tracking-widest px-2 py-0.5 rounded-sm bg-white border border-accent-mute/30 text-ink-gray mb-2.5">
-                {vol.cause}
-              </span>
-
-              {/* Role & org */}
-              <h3 className="font-serif text-xl md:text-2xl font-bold text-ink-dark leading-snug mb-0.5">
-                {vol.role}
-              </h3>
-              <p className="font-body text-sm text-ink-gray font-semibold mb-2.5">
-                {vol.organization}
-              </p>
-
-              {/* Description */}
-              <p className="font-body text-sm text-ink-gray leading-relaxed mb-4">
-                {vol.description}
-              </p>
-
-              {/* Period footer */}
-              <div className="flex items-center gap-1.5 font-mono text-[10px] uppercase tracking-widest text-ink-light">
-                <Clock size={11} />
-                <span>{vol.period}</span>
-                {vol.duration && (
-                  <>
-                    <span className="text-[#CEC0A8]">/</span>
-                    <span>{vol.duration}</span>
-                  </>
-                )}
-              </div>
+                <div className="flex items-center gap-2 font-jost text-sm text-ink-light">
+                  <Clock size={14} className="text-brand" />
+                  <span>{vol.period}</span>
+                  {vol.duration && (
+                    <>
+                      <span>·</span>
+                      <span>{vol.duration}</span>
+                    </>
+                  )}
+                </div>
+              </TiltCard>
             </motion.div>
           );
         })}

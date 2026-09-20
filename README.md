@@ -1,53 +1,30 @@
-# 🚀 My Personal Portfolio
+# Shivansh Kumar — Portfolio
 
-Welcome to the repository of my personal portfolio website! This project serves as a digital home to showcase my skills, projects, and journey as an engineering student and developer. It is designed to be clean, modern, and fully responsive.
+React 19 + Vite + Tailwind CSS 4 + Motion (TypeScript).
 
----
+## Run locally
+```bash
+npm install
+npm run dev        # http://localhost:3000
+```
 
-## 📌 Project Overview
+## Production build
+```bash
+npm run build      # outputs to dist/
+npm run preview    # serve the production build locally
+```
 
-> **🎯 Live Demo:** *https://latest-portfolio-suvii.vercel.app/*
+## Deploy (Vercel / Netlify)
+Import the repo, framework preset **Vite**, build command `npm run build`, output directory `dist`.
 
-This portfolio is built to introduce myself, display my technical skillset, and highlight the projects I have worked on. It features a smooth user experience, an interactive layout, and a direct way for recruiters or collaborators to get in touch with me.
+## Contact form -> your email
+The form sends real emails through [Web3Forms](https://web3forms.com) (free, ~250 messages/month).
+The access key lives in `src/data.ts` (`CONTACT_FORM`); set `VITE_WEB3FORMS_KEY` to override it (e.g. after rotating the key).
+If a visitor's browser blocks the request, the form falls back to opening their mail app addressed to you.
 
----
-
-## ✨ Key Features
-
-* **Responsive Design:** Optimized for seamless viewing across mobile, tablet, and desktop screens.
-* **Project Showcase:** A dedicated section displaying my best work, including technical descriptions and source code links.
-* **Skill Inventory:** A clean layout highlighting my proficiency in programming and core technical subjects.
-* **Contact Integration:** A straightforward section allowing users to connect with me instantly.
-
----
-
-## 🛠️ Tech Stack Used
-
-| Category | Technologies |
-| :--- | :--- |
-| **Frontend** | HTML5, Tailwind CSS, TypeScript |
-| **Tools & Platforms** | Visual Studio Code, Git, GitHub |
-| **Design Aesthetics** | Modern layout, Custom typography, Responsive Grid/Flexbox |
-
----
-
-## 💡 Highlighted Highlights & Focus Areas
-
-> ⚡ **Core Competencies:** Active focus on **Data Structures & Algorithms**, efficient problem-solving, and building optimized web experiences.
-
-> 🎓 **Academic Journey:** Currently pursuing an engineering degree, diving deep into technical subjects like **Linear Algebra**, **Object-Oriented Programming**, and **Web Development**.
-
-> 🚀 **Current Goals:** Actively exploring **Artificial Intelligence** fundamentals and looking for impactful internship opportunities.
-
----
-
-## 📁 Repository Structure
-
-```text
-├── index.html          # Main HTML structure of the portfolio
-├── css/
-│   └── style.css       # Custom styling and responsive layouts
-├── js/
-│   └── script.js      # Interactive features and animations (if any)
-├── assets/             # Images, icons, and media files
-└── README.md           # Project documentation
+## Where things live
+- `src/data.ts` — all content (skills, experience, achievements, certifications, projects, stats…)
+- `src/components/` — one component per section; `src/components/ui/` — cursor, tilt cards, headings, "TO TOP"
+- `src/assets/resume/` — your resume PDF + its page previews (replace the PDF and re-export the 2 page images to update the popup)
+- `src/assets/projects/` — drop a screenshot named after a project id (e.g. `proj-flashbook.png`) and it shows on the card
+- `src/assets/deco/` and `hero-*.webp` — pre-rendered painted decorations and backdrop

@@ -17,11 +17,44 @@ export const PERSONAL_INFO = {
   linkedin: 'https://www.linkedin.com/in/shivansh-kumar-adi',
   instagram: 'https://instagram.com/triples.2008',
   instagramUser: 'triples.2008',
+  twitter: 'https://x.com/shivanshXsuvii',
+  twitterUser: 'shivanshXsuvii',
+  blog: 'https://blog.shivanshonline.in',
+  stackoverflow: 'https://stackoverflow.com/users/32904287/shivansh-kumar',
   hackerrank: 'https://www.hackerrank.com/profile/shivansh07adi',
   codechef: 'https://www.codechef.com/users/shivanhd07adi',
   leetcode: 'https://leetcode.com/u/shivansh07adi/',
   bio: "I'm drawn to the gap between 'this AI research is cool' and 'this actually works in production.' I build on both sides — frontend interfaces that users enjoy, and models that don't fall apart on real-world input. Fuelled by curiosity, bad sleep, and an unreasonable amount of ice cream. Currently pursuing CSE Core at SRM University AP.",
   status: 'Open for research internships, remote developer roles, and open-source hacking.',
+};
+
+// Contact form -> your inbox via web3forms.com. The access key is public by design (it only lets people
+// send a message to the inbox it was created for). Override with VITE_WEB3FORMS_KEY if you ever rotate it.
+export const CONTACT_FORM = {
+  web3formsKey: '1de1da1a-c983-420c-9e1e-7c41dc232063'
+};
+
+// Copy for the first screen (hero)
+export const HERO_INFO = {
+  typedLines: [
+    "I'm a Software Engineer",
+    "I'm a Full Stack Developer",
+    "I'm a ME(A/R/V)N Stack Developer",
+    'I love system designing and development',
+    "I'm a low-level programming enthusiast",
+    "I'm learning operating system development",
+    "I'm learning API development",
+    "I'm learning DevOps and Cloud",
+    "I'm learning data engineering",
+    "I'm exploring unique fields of software"
+  ],
+  quote: 'Yet another noob in this professional world',
+  positions: [
+    { role: 'Open Source Maintainer', company: 'Google DeepMind' },
+    { role: 'Forward Deployed Engineer', company: 'Nutrithy Wellness' }
+  ],
+  tagline: 'building APIs & Low-Level Systems',
+  location: 'Mumbai x Vijayawada, India'
 };
 
 export const ORIGIN_STORY = {
@@ -77,7 +110,8 @@ export const SKILL_CATEGORIES: SkillCategory[] = [
       'AI Tools',
       'Python (Programming Language)',
       'NumPy',
-      'Azure AI Services'
+      'Azure AI Services',
+      'Mathematics'
     ]
   },
   {
@@ -96,7 +130,8 @@ export const SKILL_CATEGORIES: SkillCategory[] = [
       'DOM Manipulation',
       'REST APIs',
       'Web Development',
-      'Streamlit'
+      'Streamlit',
+      'Full-Stack Development'
     ]
   },
   {
@@ -113,7 +148,16 @@ export const SKILL_CATEGORIES: SkillCategory[] = [
       'Software Development',
       'Software Quality Assurance',
       'QA Automation',
-      'Telegram Bot API'
+      'Telegram Bot API',
+      'Data Engineering',
+      'Data Analytics',
+      'Data Governance',
+      'Data Warehousing',
+      'Back-End Web Development',
+      'Django',
+      'Software Testing',
+      'Testing',
+      'Operational Intelligence'
     ]
   },
   {
@@ -131,7 +175,9 @@ export const SKILL_CATEGORIES: SkillCategory[] = [
       'Relational Databases',
       'Oracle Database',
       'Object-Oriented Programming (OOP)',
-      'Data Structures'
+      'Data Structures',
+      'SQLite',
+      'Computer Science'
     ]
   },
   {
@@ -150,9 +196,25 @@ export const SKILL_CATEGORIES: SkillCategory[] = [
       'OSC',
       'Research Skills',
       'Problem Solving',
+      'Red Hat Linux',
+      'System Administration',
+      'DevOps',
+      'Data Security',
+      'Oracle Cloud'
+    ]
+  },
+  {
+    id: 'business-mgmt',
+    name: 'Business, Finance & Project Management',
+    description: 'Planning, risk thinking & product delivery',
+    skills: [
       'Project Management',
       'Project Planning',
-      'Product Development'
+      'Product Development',
+      'Financial Engineering',
+      'Risk Management',
+      'Entrepreneurship',
+      'Software Engineers'
     ]
   }
 ];
@@ -169,7 +231,7 @@ export const EXPERIENCE_LIST: ExperienceItem[] = [
     location: 'Mumbai, Maharashtra, India',
     description: 'Working full-time as a Forward Deployed Engineer, embedded directly with the founding team to ship product and internal tooling across the marketing-tech and consumer wellness stack.',
     media: [],
-    skills: ['Software Development', 'Software Quality Assurance', 'React.js', 'Next.js', 'Node.js', 'AWS']
+    skills: ['Software Development', 'Software Quality Assurance', 'Product Development', 'Computer Science', 'Project Planning', 'Data Pipelines', 'React.js', 'Next.js', 'Node.js', 'AWS']
   },
   {
     id: 'exp-nutrithy-swe-intern',
@@ -186,7 +248,7 @@ export const EXPERIENCE_LIST: ExperienceItem[] = [
       'Executed QA testing across 6-7 company platforms (e-commerce, manager/vendor/staff portals, apps), identifying and resolving critical bugs.'
     ],
     media: [],
-    skills: ['QA Automation', 'Software Development', 'REST APIs', 'Node.js', 'React.js']
+    skills: ['QA Automation', 'Software Development', 'Product Development', 'Data Pipelines', 'REST APIs', 'Node.js', 'React.js']
   },
   {
     id: 'exp-deepmind',
@@ -309,17 +371,21 @@ export const PROJECTS_DATA = {
   projects: [
     {
       id: 'proj-flashbook',
-      title: 'FlashBook — High-Concurrency Booking System',
+      category: 'Full Stack',
+      show: true, // set to false to hide this project from the gallery
+      title: 'QueueLock — High-Concurrency Booking System',
       desc: "A learning project built in phases to master distributed-systems concepts through a real flash-sale booking flow. A Redis distributed lock serializes booking attempts per drop, with Postgres row-level locking (SELECT ... FOR UPDATE) as the actual correctness guarantee against overselling. A Redis sorted-set waiting room admits users in strict FIFO order via a background worker, with per-user rate limiting and a circuit breaker around the booking path. Payments run through an idempotent state machine keyed on a client-generated idempotency key — retried or duplicate payment calls only ever charge once, verified by firing 8 concurrent requests at the same key. Background jobs (confirmation, analytics, cleanup) run on BullMQ queues, and a k6 load test simulates a 200-virtual-user flash-sale stampede against real Postgres and Redis. The Next.js frontend has its own custom-built animated components — a split-flap slot counter, a 3D dome gallery for live drops, a curved marquee, and a splash cursor — all respecting prefers-reduced-motion.",
       tags: ['Node.js', 'Redis', 'PostgreSQL', 'BullMQ', 'Next.js', 'Systems Design'],
       sleepLost: '🌙🌙🌙🌙🌙',
       iceCreamConsumed: '🍦🍦🍦🍦🍦',
       github: 'https://github.com/shivansh07adi-cloud/queuelock-backend',
       githubFrontend: 'https://github.com/shivansh07adi-cloud/queuelock-frontend',
-      live: 'https://queuelock-frontend.vercel.app'
+      live: 'https://queuelock-frontend.vercel.app/'
     },
     {
       id: 'proj-sendura',
+      category: 'Backend & Tools',
+      show: true, // set to false to hide this project from the gallery
       title: 'Sendura — Cold Outreach Automation Engine',
       desc: 'Built and shipped for Nutrithy Wellness, running 12+ concurrent email campaigns across multiple sending domains. Automated daily lead addition (50 new leads per campaign per day) with Day+4 follow-up sequencing for non-responders — processing 500+ new leads daily in production. Replaced what would otherwise require 2-3 dedicated manual outreach executives, turning a manual marketing workflow into fully automated infrastructure. Built and shipped within a month; in active production use since July 2026.',
       tags: ['Node.js', 'JavaScript', 'Automation', 'REST APIs', 'Systems Design'],
@@ -329,15 +395,19 @@ export const PROJECTS_DATA = {
     },
     {
       id: 'proj-prospekt',
+      category: 'Backend & Tools',
+      show: true, // set to false to hide this project from the gallery
       title: 'Prospekt — Lead Enrichment Pipeline',
       desc: 'Designed and built for Nutrithy Wellness using the Prospeo API with a two-step search-and-enrich flow. Built on BullMQ for async job processing, with a state machine driving lead status transitions and cross-campaign deduplication to protect API usage and domain reputation. Managed lead batching in sets of 50, processing 11,900+ leads across 240+ batches to date — powering outreach data for Sendura\'s campaigns. Built and shipped within a month; in active production use since July 2026.',
       tags: ['Node.js', 'REST APIs', 'BullMQ', 'Automation', 'Systems Design'],
       sleepLost: '🌙🌙🌙',
       iceCreamConsumed: '🍦🍦🍦',
-      github: 'https://github.com/shivansh07adi-cloud/Prospekt---Lead-Enrichment-pipeline-'
+      github: 'https://github.com/shivansh07adi-cloud/Prospekt---Lead-Enrichment-pipeline--'
     },
     {
       id: 'proj-tracenut',
+      category: 'Frontend',
+      show: true, // set to false to hide this project from the gallery
       title: 'TraceNut — Traceability & Inventory Prototype',
       desc: "A raw-material-to-dispatch traceability and inventory system for Nutrithy's makhana product line — batches, lot codes, warehouse registry, categorized destinations, scan-to-pack, and a full accountability log. Generates real EAN-13 barcodes (valid GS1 check digit) for both batches and cartons, with camera-based barcode scanning via ZXing restricted to EAN-13 for speed and accuracy. Full warehouse CRUD with search/filter/sort, capacity utilisation tracking, and a right-side drawer form with dirty-state tracking and a discard-changes confirmation. Supports registering pre-existing stock (skipping material deduction) while preserving the box's original barcode alongside a new TraceNut-generated one, so old boxes stay scannable without relabeling.",
       tags: ['React.js', 'Vite', 'JavaScript', 'Barcode Scanning', 'Systems Design'],
@@ -348,14 +418,19 @@ export const PROJECTS_DATA = {
     },
     {
       id: 'proj-evabot',
+      category: 'Backend & Tools',
+      show: true, // set to false to hide this project from the gallery
       title: 'WhatsApp Bot',
       desc: 'A full-blown WhatsApp bot platform, not a toy script. Movie/course search & download with daily limits, Instagram/Twitter media downloading, sticker creation & stealing, live IPO/stock analysis, AI-powered resume tailoring against a JD, scheduled news & GitHub feed posting, timed reminders, translation, weather, Wikipedia lookups, XP/rank tracking, and Gemini-powered chat — all wired into one bot serving multiple groups and DMs.',
       tags: ['Node.js', 'WhatsApp API', 'Gemini API', 'BullMQ', 'Automation'],
       sleepLost: '🌙🌙🌙🌙',
-      iceCreamConsumed: '🍦🍦🍦🍦'
+      iceCreamConsumed: '🍦🍦🍦🍦',
+      live: 'https://wa.me/917738468873'
     },
     {
       id: 'proj-referral-portal',
+      category: 'Full Stack',
+      show: true, // set to false to hide this project from the gallery
       title: 'Community Referral Portal',
       desc: 'A full-stack web application that connects job seekers with companies offering referrals. Companies register once to list themselves in a public directory; students and professionals can browse, search, and reach out directly — no login or middleman required. Live search across company and contact names, persistent data via a real PostgreSQL database, fully responsive across mobile and desktop, and open access with zero authentication required.',
       tags: ['Next.js', 'React.js', 'Supabase', 'PostgreSQL'],
@@ -366,16 +441,20 @@ export const PROJECTS_DATA = {
     },
     {
       id: 'proj-image-enhancement',
+      category: 'AI & Vision',
+      show: true, // set to false to hide this project from the gallery
       title: 'Image Enhancement & Preprocessing System',
       desc: 'A computer vision pipeline built with Python, OpenCV, and Streamlit. Upload any image, apply 12+ enhancement techniques (CLAHE, Bilateral Filter, HDR Effect, Pencil Sketch, Canny Edge Detection) with real-time parameter tuning, compare before/after side by side, and download the result. Also includes 5 preprocessing operations — resize, rotate, flip, grayscale, and denoising — plus real-time before/after comparison with image statistics. Supports JPG, PNG, BMP, and TIFF formats, no installation needed via the live app.',
       tags: ['Python', 'OpenCV', 'Streamlit', 'NumPy', 'Pillow'],
       sleepLost: '🌙🌙',
       iceCreamConsumed: '🍦🍦',
       github: 'https://github.com/shivansh07adi-cloud/Image-enhancement-and-preprocessing',
-      live: 'https://image-enhancement-and-preprocessing-bwjmr2nxumbxsdfpmaoqye.streamlit.app'
+      live: 'https://image-enhancement-and-preprocessing-bwjmr2nxumbxsdfpmaoqye.streamlit.app/'
     },
     {
       id: 'proj-hackjudge',
+      category: 'AI & Vision',
+      show: true, // set to false to hide this project from the gallery
       title: 'HackJudge AI',
       desc: 'An AI that judges hackathon projects like an actual panel — scoring innovation, technical depth, feasibility, and presentation. Built because judging always felt unfair and opaque.',
       tags: ['Gemini API', 'Frontend', 'REST APIs'],
@@ -386,6 +465,8 @@ export const PROJECTS_DATA = {
     },
     {
       id: 'proj-handgesture',
+      category: 'AI & Vision',
+      show: true, // set to false to hide this project from the gallery
       title: 'Hand Gesture Media Controller',
       desc: 'Control your media player with just your hand — no touch needed. Real-time gesture detection through webcam, mapped to play, pause, volume, and track controls.',
       tags: ['Python', 'OpenCV', 'MediaPipe', 'NumPy', 'Computer Vision'],
@@ -394,26 +475,51 @@ export const PROJECTS_DATA = {
       github: 'https://github.com/shivansh07adi-cloud/Hand-gesture-project-python'
     },
     {
-      id: 'proj-consentguard',
-      title: 'ConsentGuard',
-      desc: 'Built at Code4Her 2026. A platform for requesting, approving, and recording digital consent — with timestamps and a full history dashboard. Serious problem, real solution.',
-      tags: ['HTML', 'CSS', 'JavaScript', 'Hackathon'],
-      sleepLost: '🌙🌙',
-      iceCreamConsumed: '🍦🍦',
-      github: 'https://github.com/shivansh07adi-cloud/ConcernGuard'
+      id: 'proj-golden-hour',
+      category: 'Full Stack',
+      show: true, // set to false to hide this project from the gallery
+      title: 'Golden Hour — Daily Schedule Maker',
+      desc: 'A cinematic personal schedule, task and habit dashboard. No signup, no login. A private share code is your key, like a Google Drive link.',
+      tags: ['TypeScript', 'Dashboard', 'Habit Tracker'],
+      github: 'https://github.com/shivansh07adi-cloud/Golden-Hour---Your-daily-schedule-maker',
+      live: 'https://golden-hour-mckrmzhxb-shivansh07adi-clouds-projects.vercel.app/'
     },
     {
-      id: 'proj-snaprecipe',
-      title: 'SnapRecipe',
-      desc: 'Upload a photo of your fridge, get a recipe back. Combines image recognition and AI text generation into something people actually want to use.',
-      tags: ['JavaScript', 'Firebase', 'OpenAI API'],
-      sleepLost: '🌙🌙',
-      iceCreamConsumed: '🍦🍦'
+      id: 'proj-banks-etl',
+      category: 'Backend & Tools',
+      show: true, // set to false to hide this project from the gallery
+      title: 'Banks ETL Pipeline',
+      desc: "ETL pipeline: scrapes the world's largest banks, converts market cap to GBP, EUR and INR, loads to CSV and SQLite. Validated, logged, 75 tests.",
+      tags: ['Python', 'ETL', 'SQLite', 'MIT'],
+      github: 'https://github.com/shivansh07adi-cloud/banks-etl-pipeline'
+    },
+    {
+      id: 'proj-emotion-detector',
+      category: 'AI & Vision',
+      show: true, // set to false to hide this project from the gallery
+      title: 'Emotion Detector AI — From Scratch',
+      desc: 'Emotion detector trained from scratch with NumPy (TF-IDF + softmax regression). No APIs, no pretrained models. Flask app on Vercel. 84.75% accuracy on unseen tweets.',
+      tags: ['Python', 'NumPy', 'Flask', 'Apache 2.0'],
+      github: 'https://github.com/shivansh07adi-cloud/Emotion-Detector-AI----From-scratch',
+      live: 'https://emotion-detector-ai-from-scratch.vercel.app/'
     }
   ]
 };
 
 export const ACHIEVEMENTS_LIST: AchievementItem[] = [
+  {
+    id: 'ach-waypoint',
+    title: 'Founded Waypoint, a 1000+ Member WhatsApp Community',
+    issuer: 'Waypoint — WhatsApp Community',
+    issuerLabel: 'Founder Of',
+    description: 'Founded a WhatsApp community with over 1000+ active members, organised into groups for tech discussion, movies, job updates, travel, fitness and programming, plus a dedicated freelance open-source group.',
+    tags: ['Community Building', 'WhatsApp', 'Open Source', 'Tech', 'Programming'],
+    rank: 'Founder',
+    links: [
+      { label: 'Read the blog', href: 'https://blog.shivanshonline.in', kind: 'blog' },
+      { label: 'Follow on X', href: 'https://x.com/shivanshXsuvii', kind: 'x' }
+    ]
+  },
   {
     id: 'ach-ioqm',
     title: 'IOQM National Level Maths Olympiad Qualifier',
@@ -453,6 +559,14 @@ export const ACHIEVEMENTS_LIST: AchievementItem[] = [
 ];
 
 export const CERTIFICATIONS_LIST: CertificationItem[] = [
+  { id: 'cert-redhat', title: 'Administration of Red Hat Linux Systems', issuer: 'Red Hat', date: 'Sep 2026', skills: ['Red Hat Linux', 'System Administration'], accent: '#EE0000' },
+  { id: 'cert-ibm-devops', title: 'IBM DevOps and Software Engineering Professional Certificate', issuer: 'IBM', date: 'Sep 2026', skills: ['DevOps', 'Data Security'], accent: '#0F62FE' },
+  { id: 'cert-ibm-de', title: 'IBM Data Engineering Professional Certificate (V3)', issuer: 'IBM', date: 'Sep 2026', skills: ['Data Warehousing', 'Data Analytics'], accent: '#0F62FE' },
+  { id: 'cert-linux-oss', title: 'Open Source Software Development Methods', issuer: 'The Linux Foundation', date: 'Sep 2026', skills: ['Open-Source Software'], accent: '#003778' },
+  { id: 'cert-meta-be', title: 'Meta Back-End Developer', issuer: 'Meta', date: 'Sep 2026', skills: ['Back-End Web Development', 'REST APIs'], accent: '#0467DF' },
+  { id: 'cert-columbia-fe', title: 'Financial Engineering and Risk Management', issuer: 'Columbia University', date: 'Sep 2026', skills: ['Financial Engineering', 'Risk Management'], accent: '#0C2C77' },
+  { id: 'cert-fabric-gov', title: 'Microsoft Fabric: Data Governance, Security, and Analytics', issuer: 'Microsoft', date: 'Sep 2026', skills: ['Data Governance', 'Data Analytics'], accent: '#00A4EF' },
+  { id: 'cert-fabric-dw', title: 'Data Warehousing & Pipeline Development in Microsoft Fabric', issuer: 'Microsoft', date: 'Sep 2026', skills: ['Data Pipelines', 'Data Warehousing'], accent: '#00A4EF' },
   { id: 'cert-swtest', title: 'Certified in Software Testing', issuer: 'University of Minnesota', date: 'Aug 2026', skills: ['QA Automation', 'Testing'], accent: '#7A0019' },
   { id: 'cert-git', title: 'Version Control with Git', issuer: 'Atlassian', date: 'Aug 2026', skills: ['GitHub', 'Git'], accent: '#0052CC' },
   { id: 'cert-linalg', title: 'Linear Algebra for Machine Learning and Data Science', issuer: 'DeepLearning.AI', date: 'Aug 2026', skills: ['Mathematics', 'NumPy'], accent: '#E4405F' },
@@ -478,26 +592,13 @@ export const LANGUAGES_LIST: LanguageItem[] = [
   { name: 'Punjabi', proficiency: 'Elementary proficiency', level: 1 }
 ];
 
-export const ROADMAP_DATA = {
-  section_num: '11',
-  section_title: 'THE ROADMAP',
-  title: 'Where I\'m headed.',
-  subtitle: 'I don\'t have 5 years of experience. I have 5 years of runway — and a very specific plan for it.',
-  blocks: [
-    {
-      id: 'roadmap-currently-learning',
-      title: 'Currently Learning',
-      text: 'Data structures are done — now deep in algorithms daily. Strengthening JavaScript through consistent HackerRank practice, and carving out an hour every day for OOP in C++. Also exploring Java and going deeper into backend development concepts. Slow is smooth. Smooth is fast.'
-    },
-    {
-      id: 'roadmap-next-6-months',
-      title: 'Next 6 Months',
-      text: 'Getting genuinely strong in DSA and OOP as the foundation. Before switching lanes, building real depth in system design, data modelling & architecture, backend development, and DBMS. Once that base is solid, pivoting my career track toward data governance.'
-    },
-    {
-      id: 'roadmap-bigger-picture',
-      title: 'The Bigger Picture',
-      text: 'Still being written. But the draft looks ambitious — and slightly unreasonable. Just how I like it.'
-    }
+// "By the numbers" counter strip shown right after the Hero.
+// Edit `value` / `suffix` / `label` freely — numbers can be decimals (set `decimals`).
+export const STATS_DATA = {
+  section_num: '00',
+  section_title: 'BY THE NUMBERS',
+  items: [
+    { id: 'stat-projects', value: 50, decimals: 0, suffix: '+', label: 'Projects Built' },
+    { id: 'stat-years', value: 1.5, decimals: 1, suffix: '', label: 'Years of Experience' }
   ]
 };

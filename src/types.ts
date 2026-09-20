@@ -56,7 +56,9 @@ export interface AchievementItem {
   id: string;
   title: string;
   issuer: string;
-  date: string;
+  issuerLabel?: string;
+  date?: string;
+  links?: { label: string; href: string; kind?: 'blog' | 'x' }[];
   description: string;
   tags: string[];
   rank?: string;

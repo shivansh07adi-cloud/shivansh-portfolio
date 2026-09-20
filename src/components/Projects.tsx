@@ -3,134 +3,221 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { motion } from 'motion/react';
-import { Github, ExternalLink, ArrowUpRight } from 'lucide-react';
+import { useEffect, useMemo, useRef, useState } from 'react';
+import type { MouseEvent } from 'react';
+import { AnimatePresence, motion } from 'motion/react';
+import { Github, ArrowUpRight } from 'lucide-react';
 import { PROJECTS_DATA } from '../data';
+import SectionHeading, { toTitle } from './ui/SectionHeading';
+import Deco from './ui/Deco';
+import splash from '../assets/deco/splash.webp';
+
+type Project = (typeof PROJECTS_DATA.projects)[number];
+
+// Drop a screenshot into src/assets/projects/ named after the project id
+// (e.g. proj-flashbook.png / .jpg / .webp) and it is picked up automatically.
+const imageModules = import.meta.glob('../assets/projects/*.{png,jpg,jpeg,webp}', {
+  eager: true,
+  query: '?url',
+  import: 'default'
+}) as Record<string, string>;
+const PROJECT_IMAGES: Record<string, string> = Object.fromEntries(
+  Object.entries(imageModules).map(([path, url]) => [path.split('/').pop()!.replace(/\.[^.]+$/, ''), url])
+);
+
+// Tab order (only categories that actually have a visible project are shown).
+const CATEGORY_ORDER = ['Frontend', 'Full Stack', 'Backend & Tools', 'AI & Vision'];
+
+// Muted editorial palette for the auto-generated covers (used when no screenshot exists yet).
+const COVER_TONES = ['#2F3E46', '#6B4F3A', '#3B4A3F', '#4A3B47', '#2F4858', '#5C4B32'];
+
+const shortName = (title: string) => title.split(' — ')[0];
+
+// Where a card click goes: explicit `link`, else live demo, else GitHub.
+const getLink = (p: Project) => {
+  const x = p as { link?: string; live?: string; github?: string };
+  return x.link || x.live || x.github || undefined;
+};
+
+function Cover({ project, index }: { project: Project; index: number }) {
+  const img = PROJECT_IMAGES[project.id];
+  if (img) {
+    return <img src={img} alt={project.title} className="w-full h-full object-cover object-top" loading="lazy" />;
+  }
+  const tone = COVER_TONES[index % COVER_TONES.length];
+  return (
+    <div
+      className="relative w-full h-full flex flex-col justify-between p-5 overflow-hidden"
+      style={{ background: `linear-gradient(135deg, ${tone} 0%, ${tone}D9 55%, #121212 140%)` }}
+    >
+      <div
+        className="absolute inset-0 opacity-[0.07]"
+        style={{
+          backgroundImage:
+            'linear-gradient(#fff 1px, transparent 1px), linear-gradient(90deg, #fff 1px, transparent 1px)',
+          backgroundSize: '28px 28px'
+        }}
+      />
+      <span className="relative font-mono text-[9px] tracking-widest uppercase text-[#CEC0A8]">{project.category}</span>
+      <h3 className="relative font-serif italic font-bold text-[#FAF8F2] leading-tight text-2xl md:text-[26px] line-clamp-2">
+        {shortName(project.title)}
+      </h3>
+      <div className="relative flex flex-wrap gap-1">
+        {project.tags.slice(0, 3).map((t) => (
+          <span key={t} className="font-mono text-[8.5px] px-1.5 py-0.5 rounded-sm bg-white/10 text-[#FAF8F2]/80">
+            {t}
+          </span>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+// Renders a real link when the project has one, a plain box otherwise
+const Card: any = (props: any) => (props.href ? <motion.a {...props} /> : <motion.div {...props} />);
 
 export default function Projects() {
+  const projects = useMemo(() => PROJECTS_DATA.projects.filter((p) => p.show !== false), []);
+  const categories = useMemo(() => {
+    const present = new Set(projects.map((p) => p.category));
+    const ordered = CATEGORY_ORDER.filter((c) => present.has(c));
+    const extra = Array.from(present).filter((c) => !CATEGORY_ORDER.includes(c));
+    return ['All', ...ordered, ...extra];
+  }, [projects]);
+  const [filter, setFilter] = useState('All');
+
+  // Animate the gallery's height so content below glides instead of jumping when a filter changes.
+  const innerRef = useRef<HTMLDivElement>(null);
+  const [galleryH, setGalleryH] = useState<number | undefined>(undefined);
+  useEffect(() => {
+    const el = innerRef.current;
+    if (!el) return;
+    const ro = new ResizeObserver(() => setGalleryH(el.offsetHeight));
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, []);
+
+  // Cursor-following label (title + category), like the reference site.
+  const tipRef = useRef<HTMLDivElement>(null);
+  const [hovered, setHovered] = useState<Project | null>(null);
+
+  const moveTip = (e: MouseEvent) => {
+    const el = tipRef.current;
+    if (!el) return;
+    const w = el.offsetWidth;
+    let x = e.clientX + 16;
+    if (x + w > window.innerWidth - 8) x = e.clientX - w - 16; // flip to the left near the right edge
+    el.style.transform = `translate(${x}px, ${e.clientY + 18}px)`;
+  };
+
+  useEffect(() => {
+    const hide = () => setHovered(null);
+    window.addEventListener('scroll', hide, { passive: true });
+    return () => window.removeEventListener('scroll', hide);
+  }, []);
+
+  const visible = projects.filter((p) => filter === 'All' || p.category === filter);
+
   return (
-    <section id="projects" className="w-full py-16 md:py-24 px-6 md:px-12 max-w-5xl mx-auto border-b border-accent-mute/25">
-      {/* Category Header Flag */}
-      <div className="flex items-center gap-3 mb-4 font-mono text-[10px] md:text-xs tracking-widest text-ink-light">
-        <span className="font-semibold text-ink-dark">{PROJECTS_DATA.section_num}</span>
-        <span className="w-8 h-[1px] bg-accent-mute" />
-        <span className="uppercase">{PROJECTS_DATA.section_title}</span>
+    <section id="projects" className="relative w-full py-16 md:py-24 px-6 md:px-12 max-w-6xl mx-auto">
+      <Deco src={splash} className="left-[-3%] top-[3%] w-[150px]" />
+
+      <SectionHeading
+        label={toTitle(PROJECTS_DATA.section_title)}
+        title={PROJECTS_DATA.title}
+        subtitle={PROJECTS_DATA.subtitle}
+        className="mb-10 md:mb-12"
+      />
+
+      {/* Filter tabs */}
+      <div className="flex flex-wrap items-center justify-center gap-x-9 gap-y-3 mb-12">
+        {categories.map((cat) => (
+          <button
+            key={cat}
+            onClick={() => setFilter(cat)}
+            className={`font-jost text-lg md:text-xl transition-colors cursor-pointer ${
+              filter === cat ? 'text-brand' : 'text-black hover:text-brand'
+            }`}
+          >
+            {cat}
+          </button>
+        ))}
       </div>
 
-      {/* Heading */}
-      <div className="mb-14">
-        <h2 className="font-serif text-4xl md:text-6xl font-bold italic text-ink-dark mb-4 leading-tight tracking-tight">
-          {PROJECTS_DATA.title}
-        </h2>
-        <p className="font-body text-sm md:text-base text-ink-gray max-w-xl">
-          {PROJECTS_DATA.subtitle}
-        </p>
-      </div>
+      {/* Thumbnail gallery — image-only cards; click opens the project link */}
+      <motion.div animate={{ height: galleryH ?? 'auto' }} transition={{ duration: 0.4, ease: 'easeOut' }}>
+      <div ref={innerRef} className="relative grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+        <AnimatePresence mode="popLayout">
+          {visible.map((project) => {
+            const idx = projects.findIndex((p) => p.id === project.id);
+            const link = getLink(project);
+            return (
+              <Card
+                layout
+                key={project.id}
+                {...(link ? { href: link, target: '_blank', rel: 'noreferrer' } : {})}
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.8 }}
+                transition={{ duration: 0.4, ease: 'easeOut' }}
+                onMouseEnter={(e: MouseEvent) => {
+                  if (!window.matchMedia('(pointer: fine)').matches) return;
+                  setHovered(project);
+                  moveTip(e);
+                }}
+                onMouseMove={moveTip}
+                onMouseLeave={() => setHovered(null)}
+                aria-label={project.title}
+                className={`group relative block w-full aspect-video overflow-hidden rounded-lg border border-accent-mute/60 bg-[#F6F5FB] shadow-[0_10px_30px_rgba(110,100,170,0.10)] ${
+                  link ? 'cursor-pointer' : 'cursor-default'
+                }`}
+              >
+                <Cover project={project} index={idx} />
 
-      {/* 2-Column responsive grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {PROJECTS_DATA.projects.map((project, idx) => {
-          return (
-            <motion.div
-              key={project.id}
-              initial={{ opacity: 0, y: 15 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: '-50px' }}
-              transition={{ duration: 0.5, delay: idx * 0.08 }}
-              className="flex flex-col justify-between p-6 bg-[#FAF6EE] border border-accent-mute/40 border-t-2 border-t-accent-mute rounded-lg hover:shadow-md transition-all duration-300 group hover:scale-[1.01]"
-            >
-              <div>
-                {/* Project Header Title */}
-                <h3 className="font-serif text-xl md:text-2xl font-bold text-ink-dark mb-3 group-hover:italic transition-all duration-300">
-                  {project.title}
-                </h3>
-
-                {/* Description */}
-                <p className="font-body text-sm text-ink-gray leading-relaxed mb-5 text-justify">
-                  {project.desc}
-                </p>
-
-                {/* Tags */}
-                <div className="flex flex-wrap gap-1.5 mb-5">
-                  {project.tags.map((tag) => (
-                    <span
-                      key={tag}
-                      className="font-mono text-[9px] px-2 py-0.5 rounded-sm bg-canvas text-ink-gray border border-accent-mute/20 transition-all duration-300"
-                    >
-                      {tag}
-                    </span>
-                  ))}
-                </div>
-              </div>
-
-              {/* Bottom half: Ratings & Buttons */}
-              <div className="space-y-4 mt-auto">
-                {/* Fun Ratings */}
-                <div className="border-t border-accent-mute/20 pt-4 space-y-2">
-                  <div className="flex items-center justify-between text-[10px] font-mono text-[#B3A994]">
-                    <span className="uppercase tracking-wider font-semibold">Sleep Lost:</span>
-                    <span className="text-xs select-none tracking-normal font-sans">{project.sleepLost}</span>
+                {/* Touch devices have no hover, so show the title bar permanently there */}
+                <div className="pointer-fine:hidden absolute left-0 right-0 bottom-0 bg-white px-3 py-2">
+                  <div className="font-jost text-base font-medium text-ink-dark leading-tight line-clamp-1">
+                    {shortName(project.title)}
                   </div>
-                  <div className="flex items-center justify-between text-[10px] font-mono text-[#B3A994]">
-                    <span className="uppercase tracking-wider font-semibold">Ice Cream Consumed:</span>
-                    <span className="text-xs select-none tracking-normal font-sans">{project.iceCreamConsumed}</span>
-                  </div>
+                  <div className="font-jost text-sm text-ink-light">{project.category}</div>
                 </div>
-
-                {/* Button actions bar */}
-                <div className="flex gap-2 flex-wrap">
-                  {project.github && (
-                    <a
-                      href={project.github}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="inline-flex items-center justify-center gap-1.5 px-3 py-1.5 border border-accent-mute/50 hover:border-ink-dark hover:bg-black/5 rounded text-xs font-mono text-ink-gray hover:text-ink-dark transition-all duration-300 flex-grow text-center cursor-pointer font-semibold shadow-xs"
-                    >
-                      <Github size={12} />
-                      <span>{project.githubFrontend ? 'Backend' : 'GitHub'}</span>
-                    </a>
-                  )}
-                  {project.githubFrontend && (
-                    <a
-                      href={project.githubFrontend}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="inline-flex items-center justify-center gap-1.5 px-3 py-1.5 border border-accent-mute/50 hover:border-ink-dark hover:bg-black/5 rounded text-xs font-mono text-ink-gray hover:text-ink-dark transition-all duration-300 flex-grow text-center cursor-pointer font-semibold shadow-xs"
-                    >
-                      <Github size={12} />
-                      <span>Frontend</span>
-                    </a>
-                  )}
-                  {project.live && (
-                    <a
-                      href={project.live}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="inline-flex items-center justify-center gap-1.5 px-3 py-1.5 bg-ink-dark text-canvas border border-ink-dark hover:bg-[#B19470] hover:border-[#B19470] rounded text-xs font-mono transition-all duration-300 flex-grow text-center cursor-pointer font-semibold shadow-xs"
-                    >
-                      <ExternalLink size={12} />
-                      <span>Live Demo</span>
-                    </a>
-                  )}
-                </div>
-              </div>
-            </motion.div>
-          );
-        })}
+              </Card>
+            );
+          })}
+        </AnimatePresence>
       </div>
+      </motion.div>
 
-      {/* Bottom Profile GitHub Badge footer block explicitly requested */}
-      <div className="mt-12 text-center">
+      {/* Bottom Profile GitHub Badge */}
+      <div className="mt-14 text-center">
         <a
           href="https://github.com/shivansh07adi-cloud"
           target="_blank"
           rel="noreferrer"
-          className="inline-flex items-center gap-2 px-4.5 py-2.5 border border-accent-mute hover:border-ink-dark hover:bg-black/5 rounded-full text-xs font-mono text-ink-gray hover:text-ink-dark transition-all duration-300 shadow-xs hover:shadow-md cursor-pointer"
+          className="btn-wipe btn-wipe-outline btn-wipe-sm"
+          style={{ padding: '0.7rem 1.6rem' }}
         >
-          <Github size={13} />
+          <Github size={15} />
           <span>All projects are available in my GitHub account</span>
-          <ArrowUpRight size={12} className="opacity-70" />
+          <ArrowUpRight size={14} />
         </a>
+      </div>
+
+      {/* Floating label that follows the cursor */}
+      <div
+        ref={tipRef}
+        aria-hidden="true"
+        className={`pointer-events-none fixed top-0 left-0 z-[90] bg-white shadow-lg px-4 py-2.5 rounded-sm transition-opacity duration-150 ${
+          hovered ? 'opacity-100' : 'opacity-0'
+        }`}
+        style={{ transform: 'translate(-9999px, -9999px)' }}
+      >
+        <div className="font-jost text-lg md:text-xl font-medium text-ink-dark whitespace-nowrap leading-tight">
+          {hovered ? hovered.title : ''}
+        </div>
+        <div className="font-jost text-base text-ink-light mt-1">
+          {hovered ? hovered.category : ''}
+        </div>
       </div>
     </section>
   );

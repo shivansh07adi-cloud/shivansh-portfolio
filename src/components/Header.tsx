@@ -3,10 +3,12 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { MailOpen, X, FileText, MessageSquareCode, Compass, Trophy, ArrowUpRight, Terminal, Sparkles, BookOpen } from 'lucide-react';
+import { MailOpen, X, FileText, MessageSquareCode, Compass, Trophy, ArrowUpRight, Terminal, Sparkles, BookOpen, FastForward, Menu } from 'lucide-react';
 import ResumeModal from './ResumeModal';
+import { scrollToId } from '../utils/scroll';
+import waypointLogo from '../assets/waypoint-logo.webp';
 
 interface HeaderProps {
   onOpenMessages: () => void;
@@ -19,10 +21,7 @@ export default function Header({ onOpenMessages, messageCount }: HeaderProps) {
 
   const scrollToSection = (id: string) => {
     setIsMenuOpen(false);
-    const element = document.getElementById(id);
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
-    }
+    scrollToId(id);
   };
 
   const menuSections = [
@@ -31,83 +30,123 @@ export default function Header({ onOpenMessages, messageCount }: HeaderProps) {
     {  num: '03', name: 'Projects', id: 'projects' },
     { num: '04', name: 'Arsenal', id: 'skills' },
     { num: '05', name: 'Experience', id: 'experience' },
-    { num: '06', name: 'Roadmap', id: 'roadmap' },
-    { num: '07', name: "Let's Talk", id: 'contact' },
+    { num: '06', name: "Let's Talk", id: 'contact' },
   ];
+
+  // Top-bar links (the full section index still lives in the drawer)
+  const topNav = [
+    { name: 'Home', id: 'hero' },
+    { name: 'About', id: 'origin' },
+    { name: 'Projects', id: 'projects' },
+    { name: 'Experience', id: 'experience' },
+    { name: 'Contact', id: 'contact' }
+  ];
+  const [activeId, setActiveId] = useState('hero');
+  const [scrolled, setScrolled] = useState(false);
+  useEffect(() => {
+    let ticking = false;
+    const compute = () => {
+      ticking = false;
+      let current = 'hero';
+      for (const item of topNav) {
+        const el = document.getElementById(item.id);
+        if (el && el.getBoundingClientRect().top <= 160) current = item.id;
+      }
+      setActiveId(current);
+      setScrolled(window.scrollY > 30);
+    };
+    const onScroll = () => {
+      if (!ticking) {
+        ticking = true;
+        requestAnimationFrame(compute);
+      }
+    };
+    compute();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <>
-      <header className="relative w-full z-40 bg-transparent py-6 px-6 md:px-12 flex justify-between items-center max-w-7xl mx-auto">
-        {/* Mini Profile Signature */}
+      <header
+        className={`fixed top-0 inset-x-0 z-50 font-jost transition-all duration-300 ${
+          scrolled ? 'bg-white shadow-[0_6px_28px_rgba(90,80,140,0.10)] py-3' : 'bg-transparent py-6'
+        }`}
+      >
+        <div className="max-w-7xl mx-auto px-6 md:px-12 flex justify-between items-center">
+        {/* Brand */}
         <div className="flex items-center gap-3">
-          {/* Typographic Avatar Seal */}
           <div className="relative group cursor-pointer" onClick={() => scrollToSection('hero')}>
-            <div className="w-11 h-11 rounded-full bg-ink-dark flex items-center justify-center border border-accent-mute text-canvas text-sm font-serif font-bold italic tracking-wide transition-all duration-500 shadow-md transform group-hover:rotate-12 group-hover:scale-105">
-              SK
-            </div>
-            <span className="absolute -bottom-1 -right-1 w-3 h-3 rounded-full bg-emerald-500 border border-canvas animate-pulse" title="Available immediately" />
+            <img
+              src={waypointLogo}
+              alt="Waypoint logo"
+              width={48}
+              height={48}
+              className="w-12 h-12 rounded-full shadow-md ring-1 ring-black/10 transition-transform duration-500 group-hover:scale-110"
+            />
+            <span className="absolute -bottom-1 -right-1 w-3 h-3 rounded-full bg-brand-green border-2 border-white animate-pulse" title="Available immediately" />
           </div>
 
-          {/* Written Name Signature */}
           <div>
-            <span 
+            <span
               onClick={() => scrollToSection('hero')}
-              className="font-serif italic text-xl md:text-2xl font-bold tracking-wide text-ink-dark cursor-pointer hover:text-[#B19470] transition-colors duration-300 animate-fade-in"
+              className="text-xl md:text-[22px] font-semibold tracking-tight text-black cursor-pointer hover:text-brand transition-colors duration-300"
             >
               Shivansh Kumar — Suvii
             </span>
-            <div className="font-mono text-[9px] text-ink-light tracking-widest uppercase leading-none mt-0.5">
+            <div className="text-[10px] text-brand-gray tracking-widest uppercase leading-none mt-0.5">
               B.TECH CSE • 2nd Year
             </div>
           </div>
         </div>
 
-        {/* Anchor Navigation for desktop */}
-        <nav id="nav-desktop" className="hidden lg:flex items-center gap-8 font-mono text-[11px] tracking-widest text-[#666663] uppercase">
-          {menuSections.map((sec) => (
-            <button 
-              key={sec.id}
-              onClick={() => scrollToSection(sec.id)} 
-              className="hover:text-ink-dark transition-colors cursor-pointer py-1 block relative group font-semibold"
+        {/* Nav + CTA */}
+        <div className="flex items-center gap-4 xl:gap-9">
+          <nav id="nav-desktop" className="hidden xl:flex items-center gap-9 text-[17px] font-medium">
+            {topNav.map((item) => (
+              <button
+                key={item.id}
+                onClick={() => scrollToSection(item.id)}
+                className={`cursor-pointer transition-colors duration-300 ${
+                  activeId === item.id ? 'text-brand' : 'text-black hover:text-brand'
+                }`}
+              >
+                {item.name}
+              </button>
+            ))}
+            <button
+              onClick={() => setIsResumeOpen(true)}
+              className="cursor-pointer text-black hover:text-brand transition-colors duration-300"
             >
-              {sec.num} // {sec.name}
-              <span className="absolute bottom-0 left-0 w-0 h-[1.5px] bg-ink-dark transition-all duration-300 group-hover:w-full" />
+              Resume
             </button>
-          ))}
-          <button
-            onClick={() => setIsResumeOpen(true)}
-            className="ml-2 inline-flex items-center gap-1.5 px-3.5 py-1.5 bg-[#FAF6EE] text-[#B19470] border border-[#B19470]/30 hover:border-[#B19470] hover:bg-[#FAF6EE]/80 rounded-md text-xs font-mono font-semibold transition-all duration-300 cursor-pointer shadow-xs hover:shadow-sm"
-          >
-            <FileText size={12} />
-            <span>Resume</span>
-          </button>
-        </nav>
+          </nav>
 
-        {/* Elegant hanging bookmark menu badge as in the screenshots */}
-        <div className="flex items-center gap-3">
+          <button
+            onClick={() => scrollToSection('contact')}
+            className="btn-wipe btn-wipe-outline hidden md:inline-flex"
+          >
+            <FastForward size={18} fill="currentColor" />
+            <span>Connect with me</span>
+          </button>
+
+          {/* Menu / message drawer */}
           <button
             onClick={() => setIsMenuOpen(true)}
-            className="relative block h-14 w-11 bg-ink-dark hover:bg-ink-gray text-canvas transition-colors duration-300 shadow-md cursor-pointer group rounded-b-md"
+            className="relative w-11 h-11 rounded-full bg-white/95 border border-black/10 hover:border-brand hover:text-brand text-black flex items-center justify-center transition-colors duration-300 shadow-sm cursor-pointer"
             title="Open navigation & message drawer"
+            aria-label="Open navigation and message drawer"
             id="menu-badge"
           >
-            {/* Accent border edge */}
-            <div className="absolute top-0 inset-x-0 h-1 bg-accent-mute" />
-            
-            <div className="flex flex-col items-center justify-center h-full pt-1">
-              {/* The vertical three stripes '|||' strictly as shown in the mockup */}
-              <div className="flex gap-[3px] justify-center items-center h-5">
-                <span className="w-[2.5px] h-4 bg-canvas group-hover:bg-[#B19470] transition-colors inline-block" />
-                <span className="w-[2.5px] h-4 bg-canvas group-hover:bg-[#B19470] transition-colors inline-block" />
-                <span className="w-[2.5px] h-4 bg-canvas group-hover:bg-[#B19470] transition-colors inline-block" />
-              </div>
-              {messageCount > 0 && (
-                <span className="absolute -top-1.5 -right-1.5 flex h-4 w-4 items-center justify-center rounded-full bg-amber-500 text-[8px] font-mono text-ink-dark font-bold border border-canvas shadow animate-bounce">
-                  {messageCount}
-                </span>
-              )}
-            </div>
+            <Menu size={20} />
+            {messageCount > 0 && (
+              <span className="absolute -top-1.5 -right-1.5 flex h-4 w-4 items-center justify-center rounded-full bg-brand text-[9px] text-white font-bold border border-white shadow">
+                {messageCount}
+              </span>
+            )}
           </button>
+        </div>
         </div>
       </header>
 
@@ -131,7 +170,7 @@ export default function Header({ onOpenMessages, messageCount }: HeaderProps) {
                 animate={{ x: 0 }}
                 exit={{ x: '100%' }}
                 transition={{ type: 'spring', damping: 25, stiffness: 220 }}
-                className="w-screen max-w-md bg-[#FAF6EE] text-ink-dark shadow-2xl border-l border-[#B19470]/15 flex flex-col justify-between py-8 px-6 md:px-10 h-full relative"
+                className="w-screen max-w-md bg-[#F6F5FB] text-ink-dark shadow-2xl border-l border-[#F75023]/15 flex flex-col justify-between py-8 px-6 md:px-10 h-full relative"
               >
                 {/* Decorative border matching appler style */}
                 <div className="absolute top-0 inset-x-0 h-1.5 bg-ink-dark" />
@@ -143,7 +182,7 @@ export default function Header({ onOpenMessages, messageCount }: HeaderProps) {
                       <span className="font-serif italic text-lg font-bold text-ink-dark">
                         Shivansh Kumar
                       </span>
-                      <span className="font-mono text-[9px] tracking-widest text-[#B3A994]">
+                      <span className="font-mono text-[9px] tracking-widest text-[#9A96AB]">
                         NAVIGATION PORTAL
                       </span>
                     </div>
@@ -164,7 +203,7 @@ export default function Header({ onOpenMessages, messageCount }: HeaderProps) {
                         setIsMenuOpen(false);
                         setIsResumeOpen(true);
                       }}
-                      className="w-full flex items-center justify-between p-4.5 bg-ink-dark hover:bg-[#B19470] text-canvas rounded-lg cursor-pointer shadow-md transition-all duration-300 group"
+                      className="w-full flex items-center justify-between p-4.5 bg-ink-dark hover:bg-[#F75023] text-canvas rounded-lg cursor-pointer shadow-md transition-all duration-300 group"
                     >
                       <div className="flex items-center gap-3">
                         <div className="p-2 bg-canvas/10 rounded-md text-canvas">
@@ -188,7 +227,7 @@ export default function Header({ onOpenMessages, messageCount }: HeaderProps) {
                         setIsMenuOpen(false);
                         onOpenMessages();
                       }}
-                      className="w-full flex items-center justify-between p-4.5 border border-[#B19470]/30 bg-canvas/40 hover:bg-canvas text-ink-dark rounded-lg cursor-pointer transition-all duration-300 group"
+                      className="w-full flex items-center justify-between p-4.5 border border-[#F75023]/30 bg-canvas/40 hover:bg-canvas text-ink-dark rounded-lg cursor-pointer transition-all duration-300 group"
                     >
                       <div className="flex items-center gap-3">
                         <div className="p-2 bg-black/5 rounded-md text-ink-gray">
@@ -215,7 +254,7 @@ export default function Header({ onOpenMessages, messageCount }: HeaderProps) {
 
                   {/* Nav links block */}
                   <div className="space-y-0.5">
-                    <p className="font-mono text-[9px] tracking-widest text-[#B3A994] uppercase font-bold mb-3 pl-2">
+                    <p className="font-mono text-[9px] tracking-widest text-[#9A96AB] uppercase font-bold mb-3 pl-2">
                       Portfolio Index
                     </p>
                     <div className="flex flex-col gap-1.5">
@@ -226,10 +265,10 @@ export default function Header({ onOpenMessages, messageCount }: HeaderProps) {
                           className="flex items-center justify-between py-2 px-3 hover:bg-canvas rounded-md cursor-pointer group transition-all duration-300"
                         >
                           <div className="flex items-baseline gap-3">
-                            <span className="font-mono text-[10px] text-[#B3A994] font-bold">
+                            <span className="font-mono text-[10px] text-[#9A96AB] font-bold">
                               {sec.num}
                             </span>
-                            <span className="font-serif text-lg font-semibold text-ink-dark group-hover:italic group-hover:text-[#B19470] transition-all duration-300">
+                            <span className="font-serif text-lg font-semibold text-ink-dark group-hover:italic group-hover:text-[#F75023] transition-all duration-300">
                               {sec.name}
                             </span>
                           </div>
@@ -244,7 +283,7 @@ export default function Header({ onOpenMessages, messageCount }: HeaderProps) {
 
                 {/* Footer and Info */}
                 <div className="border-t border-accent-mute/30 pt-6">
-                  <p className="font-mono text-[9px] text-[#B3A994] uppercase tracking-wider mb-2">
+                  <p className="font-mono text-[9px] text-[#9A96AB] uppercase tracking-wider mb-2">
                     Current Platform Status:
                   </p>
                   <p className="font-body text-[11px] text-ink-gray leading-relaxed text-justify">

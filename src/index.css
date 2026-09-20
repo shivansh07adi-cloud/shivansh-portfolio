@@ -1,18 +1,27 @@
 @import "tailwindcss";
 
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Lora:ital,wght@0,400..700;1,400..700&family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&display=swap');
-
 @theme {
-  --font-serif: "Playfair Display", Georgia, serif;
-  --font-body: "Lora", Georgia, serif;
-  --font-mono: "JetBrains Mono", monospace;
-  
-  --color-canvas: #FAF8F2; /* Warm, rich editorial cream background */
-  --color-ink-dark: #121212; /* Deep charcoal ink text */
-  --color-ink-gray: #4A4A48; /* Sophisticated gray ink */
-  --color-ink-light: #8E8E8A; /* Very light slate-gray */
-  --color-accent-mute: #CEC0A8; /* Vintage muted gold accent border */
+  --font-serif: "Jost", "Helvetica Neue", Arial, sans-serif;   /* headings */
+  --font-body: "Open Sans", "Helvetica Neue", Arial, sans-serif; /* paragraphs */
+  --font-mono: "Jost", "Helvetica Neue", Arial, sans-serif;    /* small labels */
+  --font-jost: "Jost", "Helvetica Neue", Arial, sans-serif;
+
+  --color-canvas: #FFFFFF;
+  --color-ink-dark: #0B0B0F;
+  --color-ink-gray: #6F6B80;
+  --color-ink-light: #737088;
+  --color-accent-mute: #E4E1EE;
+
+  /* Palette sampled from the reference homepage */
+  --color-brand: #F75023;
+  --color-brand-dark: #C93A17;
+  --color-brand-green: #1CBE59;
+  --color-brand-purple: #8069F0;
+  --color-brand-gray: #6F6B80;
+  --color-soft: #F0F3FA;
 }
+
+html { scroll-behavior: smooth; }
 
 body {
   background-color: var(--color-canvas);
@@ -22,17 +31,105 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Custom scrollbar styling for high-fidelity interactive look */
-::-webkit-scrollbar {
-  width: 8px;
+/* Headings never render italic in this design */
+.font-serif.italic, .font-jost.italic { font-style: normal; }
+::selection { background: rgba(247, 80, 35, 0.22); color: #0B0B0F; }
+
+/* Slim scrollbar */
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: #F4F3F8; }
+::-webkit-scrollbar-thumb { background: #CFCBE0; border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: #B4AFCB; }
+
+@layer components {
+/* ------------------------------------------------------------------ */
+/* Pill buttons with the "wipe" hover from the reference               */
+/* filled (default): orange fill retracts downward on hover            */
+/* outline: orange fill grows up from the bottom on hover              */
+/* ------------------------------------------------------------------ */
+.btn-wipe {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  padding: 0.85rem 2.1rem;
+  border: 2px solid var(--color-brand);
+  border-radius: 9999px;
+  background: #fff;
+  color: #fff;
+  font-family: var(--font-jost);
+  font-weight: 500;
+  font-size: 1.05rem;
+  line-height: 1.2;
+  cursor: pointer;
+  transition: color 0.4s ease;
 }
-::-webkit-scrollbar-track {
-  background: var(--color-canvas);
+.btn-wipe::before {
+  content: '';
+  position: absolute;
+  inset: auto 0 0 0;
+  height: 100%;
+  background: var(--color-brand);
+  transition: height 0.4s ease;
+  z-index: -1;
 }
-::-webkit-scrollbar-thumb {
-  background: var(--color-accent-mute);
-  border-radius: 4px;
+.btn-wipe:hover { color: #111; }
+.btn-wipe:hover::before { height: 0; }
+
+.btn-wipe-outline { color: #111; background: transparent; }
+.btn-wipe-outline::before { height: 0; }
+.btn-wipe-outline:hover { color: #fff; }
+.btn-wipe-outline:hover::before { height: 100%; }
+
+.btn-wipe-sm { padding: 0.45rem 1.1rem; font-size: 0.9rem; border-width: 1.5px; }
+
 }
-::-webkit-scrollbar-thumb:hover {
-  background: var(--color-ink-light);
+
+/* ------------------------------------------------------------------ */
+/* Custom cursor: dot + lagging ring; the dot swells into a soft disc   */
+/* over interactive elements                                           */
+/* ------------------------------------------------------------------ */
+.cursor-dot, .cursor-ring {
+  position: fixed;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  z-index: 9999;
+  border-radius: 9999px;
+  will-change: transform;
+}
+.cursor-dot { width: 9px; height: 9px; margin: -4.5px 0 0 -4.5px; }
+.cursor-dot::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 9999px;
+  background: var(--color-brand);
+  transition: transform 0.35s cubic-bezier(.2,.8,.2,1), background-color 0.3s ease;
+}
+.cursor-dot.is-hover::before { transform: scale(11); background: rgba(247, 80, 35, 0.26); }
+.cursor-ring { width: 34px; height: 34px; margin: -17px 0 0 -17px; border: 2px solid rgba(247, 80, 35, 0.5); }
+@media (pointer: coarse) { .cursor-dot, .cursor-ring { display: none; } }
+
+/* Tilt cards */
+.tilt-card {
+  transition: transform 0.35s ease, box-shadow 0.35s ease;
+}
+
+/* Hero: compositor-only animations */
+@keyframes float-y {
+  0%, 100% { transform: translate3d(0, 0, 0); }
+  50% { transform: translate3d(0, -10px, 0); }
+}
+@keyframes scroll-wheel {
+  0% { transform: translate3d(0, 0, 0); opacity: 1; }
+  60% { transform: translate3d(0, 12px, 0); opacity: 0.2; }
+  100% { transform: translate3d(0, 0, 0); opacity: 1; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .float-y, .scroll-wheel { animation: none !important; }
+  html { scroll-behavior: auto; }
 }

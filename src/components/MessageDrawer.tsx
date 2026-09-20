@@ -38,7 +38,7 @@ export default function MessageDrawer({ isOpen, messages, onClose, onClear }: Me
               className="w-screen max-w-md bg-canvas border-l border-accent-mute flex flex-col h-full shadow-2xl"
             >
               {/* Header */}
-              <div className="px-6 py-5 border-b border-accent-mute/30 flex justify-between items-center bg-[#FAF6EE]">
+              <div className="px-6 py-5 border-b border-accent-mute/30 flex justify-between items-center bg-[#F6F5FB]">
                 <div className="flex items-center gap-2">
                   <div className="p-1.5 bg-ink-dark text-canvas rounded">
                     <MessageSquare size={16} />
@@ -107,14 +107,14 @@ export default function MessageDrawer({ isOpen, messages, onClose, onClear }: Me
                               {msg.email}
                             </a>
                           </div>
-                          <span className="font-mono text-[8px] text-ink-light flex items-center gap-1 bg-[#FAF6EE] px-1.5 py-0.5 rounded border border-accent-mute/20">
+                          <span className="font-mono text-[8px] text-ink-light flex items-center gap-1 bg-[#F6F5FB] px-1.5 py-0.5 rounded border border-accent-mute/20">
                             <Calendar size={8} />
                             {new Date(msg.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                           </span>
                         </div>
 
                         {/* Content */}
-                        <p className="font-body text-xs text-ink-gray leading-relaxed bg-[#FAF6EE]/50 p-2.5 rounded border border-accent-mute/10 border-l-2 border-l-ink-dark max-h-36 overflow-y-auto whitespace-pre-line">
+                        <p className="font-body text-xs text-ink-gray leading-relaxed bg-[#F6F5FB]/50 p-2.5 rounded border border-accent-mute/10 border-l-2 border-l-ink-dark max-h-36 overflow-y-auto whitespace-pre-line">
                           {msg.message}
                         </p>
                       </motion.div>
@@ -124,7 +124,7 @@ export default function MessageDrawer({ isOpen, messages, onClose, onClear }: Me
               </div>
 
               {/* Footer Panel */}
-              <div className="px-6 py-4 border-t border-accent-mute/20 bg-[#FAF6EE] font-mono text-[9px] text-ink-light text-center leading-relaxed">
+              <div className="px-6 py-4 border-t border-accent-mute/20 bg-[#F6F5FB] font-mono text-[9px] text-ink-light text-center leading-relaxed">
                 Persistent offline database records.
                 <br />
                 Created with zero external dependencies to preserve telemetry limits.

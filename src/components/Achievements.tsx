@@ -4,93 +4,85 @@
  */
 
 import { motion } from 'motion/react';
-import { Award } from 'lucide-react';
+import { Award, BookOpen, ArrowUpRight } from 'lucide-react';
+import XIcon from './ui/XIcon';
 import { ACHIEVEMENTS_LIST } from '../data';
+import SectionHeading from './ui/SectionHeading';
+import TiltCard from './ui/TiltCard';
+import Deco from './ui/Deco';
+import brushLilac from '../assets/deco/brush-lilac.webp';
+import blobRed from '../assets/deco/blob-red.webp';
 
 export default function Achievements() {
   return (
-    <section
-      id="achievements"
-      className="w-full py-16 md:py-24 px-6 md:px-12 max-w-4xl mx-auto border-b border-accent-mute/25"
-    >
-      {/* Category Header Flag */}
-      <div className="flex items-center gap-3 mb-4 font-mono text-[10px] md:text-xs tracking-widest text-ink-light">
-        <span className="font-semibold text-ink-dark">08</span>
-        <span className="w-8 h-[1px] bg-accent-mute" />
-        <span className="uppercase">RECEIPTS</span>
-      </div>
+    <section id="achievements" className="relative w-full py-16 md:py-24 px-6 md:px-12 max-w-5xl mx-auto">
+      <Deco src={brushLilac} className="left-[-14%] top-[8%] w-[380px] -scale-x-100" />
 
-      {/* Heading */}
-      <div className="mb-14">
-        <h2 className="font-serif text-4xl md:text-6xl font-bold italic text-ink-dark mb-4 leading-tight tracking-tight">
-          Proof, Not Promises.
-        </h2>
-        <p className="font-body text-sm md:text-base text-ink-gray max-w-xl">
-          A shelf of the moments where the work got measured against everyone else's — and held up.
-        </p>
-      </div>
+      <SectionHeading
+        label="Receipts"
+        title="Proof, Not Promises."
+        subtitle="A shelf of the moments where the work got measured against everyone else's — and held up."
+      />
 
-      {/* Award Shelf — a horizontal-ribbon layout, distinct from every other section on the page */}
-      <div className="flex flex-col divide-y divide-accent-mute/25 border-t border-b border-accent-mute/25">
+      <div className="flex flex-col gap-7">
         {ACHIEVEMENTS_LIST.map((ach, idx) => (
           <motion.div
             key={ach.id}
-            initial={{ opacity: 0, x: -16 }}
-            whileInView={{ opacity: 1, x: 0 }}
+            initial={{ opacity: 0, y: 22 }}
+            whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: '-80px' }}
-            transition={{ duration: 0.45, delay: idx * 0.07 }}
-            className="group flex flex-col sm:flex-row gap-4 sm:gap-6 py-6 sm:items-start hover:bg-black/[0.02] transition-colors duration-300 px-2 -mx-2 rounded"
+            transition={{ duration: 0.5, delay: idx * 0.06 }}
           >
-            {/* Ribbon badge with rank */}
-            <div className="shrink-0 flex sm:flex-col items-center sm:items-center gap-2 sm:w-20">
-              <div className="relative w-12 h-14 sm:w-14 sm:h-16">
-                <svg viewBox="0 0 56 64" className="w-full h-full drop-shadow-sm">
-                  <path
-                    d="M8 0h40a4 4 0 0 1 4 4v50l-24-14L4 54V4a4 4 0 0 1 4-4z"
-                    fill="#B19470"
-                    className="transition-transform duration-300 group-hover:scale-105 origin-top"
-                  />
-                </svg>
-                <Award
-                  size={20}
-                  strokeWidth={2}
-                  className="absolute inset-0 m-auto text-white top-[8px]"
-                />
-              </div>
-              {ach.rank && (
-                <span className="font-mono text-[9px] uppercase tracking-widest text-[#86653E] font-bold text-center leading-tight">
-                  {ach.rank}
+            <TiltCard max={9} lift={6} scale={1.015} className="bg-white rounded-md p-7 md:p-9 shadow-[0_14px_50px_rgba(110,100,170,0.12)] flex flex-col sm:flex-row gap-6">
+              <div className="shrink-0 flex sm:flex-col items-center gap-3 sm:w-24">
+                <span
+                  className="w-[74px] h-[74px] flex items-center justify-center bg-contain bg-center bg-no-repeat text-white"
+                  style={{ backgroundImage: `url(${blobRed})` }}
+                >
+                  <Award size={28} strokeWidth={1.8} />
                 </span>
-              )}
-            </div>
+                {ach.rank && (
+                  <span className="font-jost text-[13px] text-brand font-medium text-center leading-tight">{ach.rank}</span>
+                )}
+              </div>
 
-            {/* Content */}
-            <div className="flex-1 min-w-0">
-              <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1 mb-1.5">
-                <h3 className="font-serif text-xl md:text-2xl font-bold text-ink-dark leading-snug">
-                  {ach.title}
-                </h3>
-                <span className="font-mono text-[10px] uppercase tracking-widest text-ink-light shrink-0">
-                  {ach.date}
-                </span>
+              <div className="flex-1 min-w-0">
+                <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1 mb-1">
+                  <h3 className="font-jost text-black text-2xl font-medium leading-snug">{ach.title}</h3>
+                  {ach.date && <span className="font-jost text-sm text-ink-light shrink-0">{ach.date}</span>}
+                </div>
+                <p className="font-jost text-lg mb-3">
+                  <span className="text-black">{ach.issuerLabel ?? 'Issued By'} </span>
+                  <span className="text-brand">{ach.issuer}</span>
+                </p>
+                <p className="font-body text-brand-gray text-[15px] leading-[1.85] mb-4 max-w-3xl">{ach.description}</p>
+                <div className="flex flex-wrap gap-2">
+                  {ach.tags.map((tag) => (
+                    <span key={tag} className="font-jost text-[13px] px-3 py-1 rounded-full border border-[#E4E1EE] text-[#4B4760] bg-white">
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+
+                {ach.links && ach.links.length > 0 && (
+                  <div className="flex flex-wrap gap-3 mt-5">
+                    {ach.links.map((l) => (
+                      <a
+                        key={l.href}
+                        href={l.href}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="btn-wipe btn-wipe-outline btn-wipe-sm"
+                      >
+                        {l.kind === 'x' ? <XIcon size={14} /> : <BookOpen size={14} />}
+                        <span>{l.label}</span>
+                        <ArrowUpRight size={13} />
+                      </a>
+                    ))}
+                  </div>
+                )}
               </div>
-              <p className="font-body text-sm text-ink-gray font-semibold mb-2">
-                {ach.issuer}
-              </p>
-              <p className="font-body text-sm text-ink-gray leading-relaxed mb-3 max-w-2xl">
-                {ach.description}
-              </p>
-              <div className="flex flex-wrap gap-1.5">
-                {ach.tags.map((tag) => (
-                  <span
-                    key={tag}
-                    className="font-mono text-[9px] px-2 py-0.5 rounded-sm border border-accent-mute/25 bg-[#FAF6EE] text-ink-gray"
-                  >
-                    {tag}
-                  </span>
-                ))}
-              </div>
-            </div>
+            </TiltCard>
           </motion.div>
         ))}
       </div>
