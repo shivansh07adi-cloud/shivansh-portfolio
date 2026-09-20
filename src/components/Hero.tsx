@@ -59,10 +59,10 @@ export default function Hero() {
   return (
     <section
       id="hero"
-      className="relative z-10 w-full max-w-7xl mx-auto px-6 md:px-12 pt-[120px] pb-28 lg:pb-32 lg:min-h-screen grid lg:grid-cols-[1.05fr_1fr] gap-12 lg:gap-6 items-center font-jost"
+      className="relative z-10 w-full max-w-7xl mx-auto px-6 md:px-12 pt-[120px] pb-28 lg:pb-32 lg:min-h-screen flex flex-col lg:grid lg:grid-cols-[minmax(0,1.05fr)_minmax(0,1fr)] gap-12 lg:gap-6 lg:items-center font-jost overflow-x-clip"
     >
       {/* ---------- Left: copy ---------- */}
-      <div className="order-2 lg:order-1">
+      <div className="order-2 lg:order-1 w-full min-w-0 max-w-full [overflow-wrap:anywhere]">
         <motion.div
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
@@ -88,7 +88,7 @@ export default function Hero() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, delay: 0.12 }}
-          className="text-black font-medium tracking-tight leading-[1.02] text-[clamp(44px,6.4vw,84px)] mb-6"
+          className="text-black font-medium tracking-tight leading-[1.02] text-[clamp(34px,10.6vw,72px)] lg:text-[clamp(44px,6.4vw,84px)] mb-6"
         >
           {PERSONAL_INFO.name}
         </motion.h1>
@@ -144,7 +144,7 @@ export default function Hero() {
           className="flex flex-wrap items-center gap-x-5 gap-y-3 mb-8"
         >
           <span
-            className="inline-flex items-center px-4 py-2 rounded-md bg-white/90 border border-[#E4E1EE] text-black text-[14px] md:text-[15px] font-medium shadow-[0_6px_20px_rgba(110,100,170,0.10)]"
+            className="inline-flex max-w-full items-center px-3.5 md:px-4 py-2 rounded-md bg-white/90 border border-[#E4E1EE] text-black text-[12.5px] md:text-[15px] font-medium shadow-[0_6px_20px_rgba(110,100,170,0.10)] whitespace-normal break-words"
             style={{ fontFamily: "ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace" }}
           >
             ~ {HERO_INFO.tagline}
@@ -165,7 +165,7 @@ export default function Hero() {
             About Me
           </button>
 
-          <div className="flex items-center gap-5">
+          <div className="flex flex-wrap items-center gap-x-5 gap-y-3 max-w-full">
             {SOCIALS.map(({ href, label, Icon }) => (
               <a
                 key={label}
@@ -188,7 +188,7 @@ export default function Hero() {
         initial={{ opacity: 0, scale: 0.94 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.9, delay: 0.15 }}
-        className="order-1 lg:order-2 relative w-full max-w-[340px] sm:max-w-[420px] lg:max-w-[500px] mx-auto lg:mr-0 lg:ml-auto"
+        className="order-1 lg:order-2 relative w-full min-w-0 max-w-[340px] sm:max-w-[420px] lg:max-w-[500px] mx-auto lg:mr-0 lg:ml-auto"
       >
         <div className="relative w-full aspect-[500/560]">
           <img

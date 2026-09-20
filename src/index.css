@@ -21,7 +21,14 @@
   --color-soft: #F0F3FA;
 }
 
-html { scroll-behavior: smooth; }
+html {
+  scroll-behavior: smooth;
+  /* stop Android Chrome from re-sizing ("boosting") text on its own */
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+/* nothing may ever make the page wider than the screen */
+html, body { max-width: 100%; overflow-x: clip; }
 
 body {
   background-color: var(--color-canvas);

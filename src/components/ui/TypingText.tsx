@@ -72,7 +72,7 @@ export default function TypingText({
   }, [lines, typeMs, deleteMs, holdMs, gapMs]);
 
   return (
-    <span className="grid">
+    <span className="grid max-w-full [overflow-wrap:anywhere]">
       {/* invisible copies reserve the space of the longest line at any screen width */}
       {lines.map((l) => (
         <span key={l} aria-hidden="true" className="invisible [grid-area:1/1]">
